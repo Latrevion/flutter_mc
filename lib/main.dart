@@ -1,5 +1,4 @@
-import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -58,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _sendMessage() async {
     //Send messages through the BasicMessageChannel instance
     String? message = await _channel.send("Hello from dart");
-    log('send message:$message');
+    log('flutter send message:$message');
   }
 
   void _incrementCounter() {
@@ -82,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_counter',
+              '$_message',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
