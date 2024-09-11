@@ -37,27 +37,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String? _message;
 
-  static const _channel = BasicMessageChannel('messageChannel', StringCodec());
+  //1.create a EventChannel instance,the name needs to be passed,the name needs to be exactly the same as the original one
+  static const _channel = EventChannel('messageChannel');
 
   @override
   void initState() {
     super.initState();
-
-    //Through the BasicMessageChannel instance, register a receive callback and return a message
-    _channel.setMessageHandler((message) async {
-      log('receive message:$message');
+    //2.through the EventChannel instance,register the callback function,and return the message
+    _channel.receiveBroadcastStream().listen((event) {
+      log('Receive event:$event');
       setState(() {
-        _message = message;
+        _message = event;
       });
-
-      return "ACK from dart";
-    });
-  }
-
-  Future<void> _sendMessage() async {
-    //Send messages through the BasicMessageChannel instance
-    String? message = await _channel.send("Hello from dart");
-    log('flutter send message:$message');
+    }, onError: (error) {
+      log('Receive error:$error');
+    }, cancelOnError: true);
   }
 
   void _incrementCounter() {
@@ -88,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _sendMessage,
+        onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
