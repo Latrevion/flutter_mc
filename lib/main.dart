@@ -37,21 +37,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String? _message;
 
-  //1.create a EventChannel instance,the name needs to be passed,the name needs to be exactly the same as the original one
-  static const _channel = EventChannel('messageChannel');
+  //1.create a MethodChannel instance,the name needs to be passed,the name needs to be exactly the same as the original one
+  static const _channel = MethodChannel('methodChannel');
 
   @override
   void initState() {
     super.initState();
-    //2.through the EventChannel instance,register the callback function,and return the message
-    _channel.receiveBroadcastStream().listen((event) {
-      log('Receive event:$event');
-      setState(() {
-        _message = event;
-      });
-    }, onError: (error) {
-      log('Receive error:$error');
-    }, cancelOnError: true);
+    _initMethodChannel();
+  }
+
+  Future<void> _initMethodChannel() async {
+    final Map<String, dynamic> map = {
+      'name': 'flutter',
+      'version': "3.22.3",
+      'language': 'dart',
+      'android_api': 34
+    };
+
+    //2.through the MethodChannel
+    String result = await _channel.invokeMethod('getFlutterInfo', map);
+    log('Method invoke result:$result');
   }
 
   void _incrementCounter() {
